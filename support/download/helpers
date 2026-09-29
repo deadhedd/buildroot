@@ -78,7 +78,7 @@ post_process_unpack() {
     local one_file
 
     mkdir "${dest}"
-    ${TAR} -C "${dest}" --strip-components=1 -xzf "${tarball}"
+    ${TAR} -C "${dest}" --strip-components=1 -xf "${tarball}"
     one_file="$(find "${dest}" -type f -print0 |LC_ALL=C sort -z |sed 's/\x0.*//')"
     touch -r "${one_file}" "${dest}.timestamp"
 }

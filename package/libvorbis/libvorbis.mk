@@ -13,5 +13,8 @@ LIBVORBIS_DEPENDENCIES = host-pkgconf libogg
 LIBVORBIS_LICENSE = BSD-3-Clause
 LIBVORBIS_LICENSE_FILES = COPYING
 LIBVORBIS_CPE_ID_VENDOR = xiph.org
+HOST_LIBVORBIS_DEPENDENCIES = host-pkgconf host-libogg
+HOST_LIBVORBIS_CONF_OPTS = --disable-oggtest
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))

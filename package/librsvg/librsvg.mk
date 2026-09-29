@@ -6,12 +6,16 @@
 # batocera - bump (remove patch) and move to meson build
 LIBRSVG_VERSION_MAJOR = 2.61
 LIBRSVG_VERSION = $(LIBRSVG_VERSION_MAJOR).3
-LIBRSVG_SITE = https://download.gnome.org/sources/librsvg/$(LIBRSVG_VERSION_MAJOR)
-LIBRSVG_SOURCE = librsvg-$(LIBRSVG_VERSION).tar.xz
+LIBRSVG_SITE = https://download.gnome.org/sources/librsvg/$(LIBRSVG_VERSION_MAJOR)/librsvg-$(LIBRSVG_VERSION).tar.xz?buildroot-path=filename
+LIBRSVG_SOURCE = librsvg-$(LIBRSVG_VERSION)-cargo5.tar.gz
 LIBRSVG_INSTALL_STAGING = YES
 LIBRSVG_LICENSE = LGPL-2.1+
 LIBRSVG_LICENSE_FILES = COPYING.LIB
 LIBRSVG_CPE_ID_VENDOR = gnome
+
+LIBRSVG_DOWNLOAD_DEPENDENCIES += host-rustc
+LIBRSVG_DL_ENV += CARGO_HOME=$(BR_CARGO_HOME) PATH=$(HOST_DIR)/bin:$(PATH)
+LIBRSVG_DOWNLOAD_POST_PROCESS = cargo
 
 LIBRSVG_CONF_ENV = \
     $(PKG_CARGO_ENV) \
@@ -21,7 +25,8 @@ LIBRSVG_CONF_ENV = \
 # batocera - add ninja env for rust nonsense
 LIBRSVG_NINJA_ENV = \
 	$(PKG_CARGO_ENV) \
-	CARGO_HOME=$(HOST_DIR)/share/cargo \
+	CARGO_HOME=$(BR_CARGO_HOME) \
+	CARGO_NET_OFFLINE=true \
 	PKG_CONFIG_ALLOW_CROSS=1 \
 	PKG_CONFIG_SYSROOT_DIR=$(STAGING_DIR) \
 	PKG_CONFIG_PATH=$(STAGING_DIR)/usr/lib/pkgconfig \
@@ -51,7 +56,8 @@ LIBRSVG_DEPENDENCIES = \
 
 # batocera - add ninja env for rust nonsense
 HOST_LIBRSVG_NINJA_ENV = \
-	CARGO_HOME=$(HOST_DIR)/share/cargo \
+	CARGO_HOME=$(BR_CARGO_HOME) \
+	CARGO_NET_OFFLINE=true \
 	LD_LIBRARY_PATH=$(HOST_DIR)/lib \
 	RUSTFLAGS="-C link-arg=-Wl,-rpath,$(HOST_DIR)/lib"
 

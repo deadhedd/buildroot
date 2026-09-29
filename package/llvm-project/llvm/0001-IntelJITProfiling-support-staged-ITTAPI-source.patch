@@ -1,0 +1,23 @@
+diff --git a/llvm/lib/ExecutionEngine/IntelJITProfiling/CMakeLists.txt b/llvm/lib/ExecutionEngine/IntelJITProfiling/CMakeLists.txt
+--- a/llvm/lib/ExecutionEngine/IntelJITProfiling/CMakeLists.txt
++++ b/llvm/lib/ExecutionEngine/IntelJITProfiling/CMakeLists.txt
+@@ -22,10 +22,14 @@
+ endif()
+ 
+-execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ITTAPI_GIT_TAG}
+-                WORKING_DIRECTORY ${ITTAPI_SOURCE_DIR}/ittapi
+-                RESULT_VARIABLE GIT_CHECKOUT_RESULT)
+-if(NOT GIT_CHECKOUT_RESULT EQUAL "0")
+-    message(FATAL_ERROR "git checkout ${ITTAPI_GIT_TAG} failed with ${GIT_CHECKOUT_RESULT}, please checkout ${ITTAPI_GIT_TAG} at ${ITTAPI_SOURCE_DIR}/ittapi")
++# A checksum-pinned source archive has no .git directory and already supplies
++# the selected ITT API version.
++if(EXISTS ${ITTAPI_SOURCE_DIR}/ittapi/.git)
++    execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ITTAPI_GIT_TAG}
++                    WORKING_DIRECTORY ${ITTAPI_SOURCE_DIR}/ittapi
++                    RESULT_VARIABLE GIT_CHECKOUT_RESULT)
++    if(NOT GIT_CHECKOUT_RESULT EQUAL "0")
++        message(FATAL_ERROR "git checkout ${ITTAPI_GIT_TAG} failed with ${GIT_CHECKOUT_RESULT}, please checkout ${ITTAPI_GIT_TAG} at ${ITTAPI_SOURCE_DIR}/ittapi")
++    endif()
+ endif()
+ 
+ include_directories( ${ITTAPI_SOURCE_DIR}/ittapi/include/ )

@@ -2,3 +2,5 @@
 sha256  922f1817a0df7b1489272d18134ee0087a8b068828f87ac63b9861b1a9965888  llvm-project-22.1.8.src.tar.xz
 # locally calculated
 sha256  8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee  LICENSE.TXT
+# locally calculated from the pinned v3.18.12 GitHub archive
+sha256  e574fea3656fc65ef32df7925c7567f62b6a53d92780ade7e331f589e5d0c33c  ittapi-v3.18.12.tar.gz

@@ -15,6 +15,21 @@ LLVM_SUPPORTS_IN_SOURCE_BUILD = NO
 LLVM_SUBDIR = llvm
 LLVM_INSTALL_STAGING = YES
 
+# LLVM's Intel JIT profiler fetches ITT API with git during CMake configure.
+# Stage the pinned source archive during extraction so target configure remains
+# offline and the existing target JIT profiling option stays enabled.
+LLVM_INTEL_JITEVENTS_VERSION = v3.18.12
+LLVM_INTEL_JITEVENTS_SOURCE = ittapi-$(LLVM_INTEL_JITEVENTS_VERSION).tar.gz
+LLVM_EXTRA_DOWNLOADS += \
+	$(call github,intel,ittapi,$(LLVM_INTEL_JITEVENTS_VERSION))/$(LLVM_INTEL_JITEVENTS_SOURCE)
+
+define LLVM_STAGE_INTEL_JITEVENTS
+	mkdir -p $(LLVM_DIR)/ittapi
+	$(TAR) -xzf $(LLVM_DL_DIR)/$(LLVM_INTEL_JITEVENTS_SOURCE) \
+		-C $(LLVM_DIR)/ittapi --strip-components=1
+endef
+LLVM_POST_EXTRACT_HOOKS += LLVM_STAGE_INTEL_JITEVENTS
+
 # batocera - add host-cmake
 HOST_LLVM_DEPENDENCIES += host-python3 host-llvm-cmake host-cmake
 LLVM_DEPENDENCIES += host-llvm host-cmake
@@ -22,6 +37,7 @@ LLVM_DEPENDENCIES += host-llvm host-cmake
 # Path to cmake modules from host-llvm-cmake
 HOST_LLVM_CONF_OPTS += -DCMAKE_MODULE_PATH=$(HOST_DIR)/lib/cmake/llvm
 LLVM_CONF_OPTS += -DCMAKE_MODULE_PATH=$(HOST_DIR)/lib/cmake/llvm
+LLVM_CONF_OPTS += -DITTAPI_SOURCE_DIR=$(LLVM_DIR)
 
 HOST_LLVM_CONF_OPTS += -DLLVM_COMMON_CMAKE_UTILS=$(HOST_DIR)/lib/cmake/llvm
 LLVM_CONF_OPTS += -DLLVM_COMMON_CMAKE_UTILS=$(HOST_DIR)/lib/cmake/llvm
@@ -286,15 +302,16 @@ LLVM_CONF_OPTS += \
 	-DLLVM_INCLUDE_TESTS=OFF \
 	-DLLVM_INCLUDE_BENCHMARKS=OFF
 
+# The host LLVM is used as a build tool and does not need the target runtime's
+# Intel JIT profiling component, which triggers an unmanaged source clone.
+HOST_LLVM_CONF_OPTS += \
+	-DLLVM_USE_INTEL_JITEVENTS=OFF
+
 # batocera - Required for RPCS3
 ifeq ($(BR2_PACKAGE_LLVM_INTEL_JITEVENTS),y)
-HOST_LLVM_CONF_OPTS += \
-    -DLLVM_USE_INTEL_JITEVENTS=ON
 LLVM_CONF_OPTS += \
     -DLLVM_USE_INTEL_JITEVENTS=ON
 else
-HOST_LLVM_CONF_OPTS += \
-    -DLLVM_USE_INTEL_JITEVENTS=OFF
 LLVM_CONF_OPTS += \
     -DLLVM_USE_INTEL_JITEVENTS=OFF
 endif

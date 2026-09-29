@@ -15,3 +15,4 @@ LIBOGG_DEPENDENCIES = host-pkgconf
 
 # batocera - use cmake
 $(eval $(cmake-package))
+$(eval $(host-cmake-package))

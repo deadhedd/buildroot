@@ -15,5 +15,7 @@ JSON_FOR_MODERN_CPP_INSTALL_STAGING = YES
 # header only library
 JSON_FOR_MODERN_CPP_INSTALL_TARGET = NO
 JSON_FOR_MODERN_CPP_CONF_OPTS = -DJSON_BuildTests=OFF -DJSON_MultipleHeaders=ON
+HOST_JSON_FOR_MODERN_CPP_CONF_OPTS = -DJSON_BuildTests=OFF -DJSON_MultipleHeaders=ON
 
 $(eval $(cmake-package))
+$(eval $(host-cmake-package))

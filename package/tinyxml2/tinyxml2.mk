@@ -15,5 +15,7 @@ ifeq ($(BR2_STATIC_LIBS),y)
 TINYXML2_CONF_OPTS += -DBUILD_STATIC_LIBS=ON
 endif
 
+TINYXML2_CONF_OPTS += -Dtinyxml2_INSTALL_CMAKEDIR=share/cmake/tinyxml2
+
 $(eval $(cmake-package))
 $(eval $(host-cmake-package))

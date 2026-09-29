@@ -11,6 +11,8 @@ OPUSFILE_LICENSE = BSD-3-Clause
 OPUSFILE_LICENSE_FILES = COPYING
 OPUSFILE_CPE_ID_VENDOR = xiph
 OPUSFILE_INSTALL_STAGING = YES
+HOST_OPUSFILE_DEPENDENCIES = host-pkgconf host-libogg host-opus
+HOST_OPUSFILE_CONF_OPTS += --disable-http
 
 # 0001-Propagate-allocation-failure-from-ogg_sync_buffer.patch
 OPUSFILE_IGNORE_CVES += CVE-2022-47021
@@ -27,3 +29,4 @@ OPUSFILE_CONF_OPTS += --enable-fixed-point
 endif
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))

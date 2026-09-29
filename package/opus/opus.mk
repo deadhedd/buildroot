@@ -10,6 +10,7 @@ OPUS_LICENSE = BSD-3-Clause
 OPUS_LICENSE_FILES = COPYING
 OPUS_CPE_ID_VENDOR = opus-codec
 OPUS_INSTALL_STAGING = YES
+HOST_OPUS_DEPENDENCIES = host-pkgconf
 
 OPUS_CFLAGS = $(TARGET_CFLAGS)
 
@@ -48,3 +49,4 @@ OPUS_CONF_OPTS += --disable-intrinsics
 endif
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))

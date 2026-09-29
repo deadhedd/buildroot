@@ -14,6 +14,18 @@ SDL2_CPE_ID_PRODUCT = simple_directmedia_layer
 SDL2_INSTALL_STAGING = YES
 SDL2_CONFIG_SCRIPTS = sdl2-config
 
+HOST_SDL2_DEPENDENCIES = host-pkgconf
+HOST_SDL2_CONF_OPTS += \
+	--disable-video-x11 \
+	--disable-video-wayland \
+	--disable-video-kmsdrm \
+	--disable-video-opengl \
+	--disable-video-opengles \
+	--disable-video-vulkan \
+	--disable-alsa \
+	--disable-pulseaudio \
+	--disable-pipewire
+
 # batocera - Removed --disable-video-wayland and --disable-video-vulkan
 SDL2_CONF_OPTS += \
 	--disable-rpath \
@@ -33,8 +45,6 @@ SDL2_CONF_OPTS += \
 	--disable-directx \
 	--disable-xinput \
 	--disable-wasapi \
-	--disable-hidapi-joystick \
-	--disable-hidapi-libusb \
 	--disable-joystick-virtual \
 	--disable-render-d3d
 
@@ -43,7 +53,7 @@ SDL2_CONF_OPTS += \
 # Change the absolute /usr path to resolve relatively to the sdl2-config.cmake location.
 # https://bugzilla.libsdl.org/show_bug.cgi?id=4597
 define SDL2_FIX_SDL2_CONFIG_CMAKE
-	$(SED) '2iget_filename_component(PACKAGE_PREFIX_DIR "$${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)\n' \
+	$(SED) '2iget_filename_component(PACKAGE_PREFIX_DIR "$${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)\n' \
 		$(STAGING_DIR)/usr/lib/cmake/SDL2/sdl2-config.cmake
 	$(SED) 's%"/usr"%$${PACKAGE_PREFIX_DIR}%' \
 		$(STAGING_DIR)/usr/lib/cmake/SDL2/sdl2-config.cmake
@@ -71,9 +81,6 @@ SDL2_POST_INSTALL_STAGING_HOOKS += SDL2_FIX_SDL2_CONFIG_CMAKE
 
 # We must enable static build to get compilation successful.
 SDL2_CONF_OPTS += --enable-static
-
-# batocera - disable hidapi
-SDL2_CONF_OPTS += --disable-hidapi
 
 # batocera - Used in screen rotation (SDL and Retroarch)
 ifeq ($(BR2_PACKAGE_ROCKCHIP_RGA),y)
@@ -229,3 +236,4 @@ SDL2_CONF_OPTS += --disable-video-vulkan
 endif
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))
