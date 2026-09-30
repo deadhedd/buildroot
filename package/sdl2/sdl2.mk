@@ -53,7 +53,7 @@ SDL2_CONF_OPTS += \
 # Change the absolute /usr path to resolve relatively to the sdl2-config.cmake location.
 # https://bugzilla.libsdl.org/show_bug.cgi?id=4597
 define SDL2_FIX_SDL2_CONFIG_CMAKE
-	$(SED) '2iget_filename_component(PACKAGE_PREFIX_DIR "$${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)\n' \
+	$(SED) '2iget_filename_component(PACKAGE_PREFIX_DIR "$${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)\n' \
 		$(STAGING_DIR)/usr/lib/cmake/SDL2/sdl2-config.cmake
 	$(SED) 's%"/usr"%$${PACKAGE_PREFIX_DIR}%' \
 		$(STAGING_DIR)/usr/lib/cmake/SDL2/sdl2-config.cmake
